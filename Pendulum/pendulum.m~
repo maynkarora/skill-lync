@@ -1,0 +1,34 @@
+%simulate the motion of a pendulum
+clear all
+close all
+clc
+%initial values
+l=1;
+m=1;
+b=0.05;
+g=9.81;
+
+%theta values
+q=[0;3];
+t=linspace(0,20,200);
+%solve
+[time,result]=ode45(@(t,q) odefun(t,q,b,g,l,m),t,q);
+
+%plot
+plot(time,result(:,1),'color',[0 1 1],'linewidth',1.2)
+ct=1;
+for i =1:length(result)
+    a=result(i);
+    x1=l+l*cos((3*pi/2)+a)
+    y1=l+l*sin((3*pi/2)+a)
+    plot([l x1],[l y1],'-o','linewidth',1.5,'color',[0 0 0],'markerfacecolor','r','markersize',10)
+    axis([0 2 0 2])
+    m(1)=getframe(gcf)
+    pause(0.25)
+    ct=ct+1
+end
+movie(m)
+video=VideoWriter('Pendulum.avi','UNCOMPRESSED AVI')
+open(video)
+writeVideo(video,m)
+close(video)
